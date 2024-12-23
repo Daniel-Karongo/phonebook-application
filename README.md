@@ -7,3 +7,4 @@ As such here is the source code for the same and the way to run this is as follo
 - Modify the "server.js" file with the credentials specific to your machine.
 - cd into the serverside, run "node server.js" to start the backend server.
 - open another terminal and serve the angular project. You will have to run "npm install" first before serving using "ng serve".
+- open the UI on "http://localhost:4200".
