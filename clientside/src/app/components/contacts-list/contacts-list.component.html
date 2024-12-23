@@ -1,0 +1,148 @@
+<div class="app-contacts-list">
+  <div class="flex justify-between items-center mb-4">
+    <button (click)="toggleView()" class="p-2 bg-blue-500 text-white rounded toggle-button">
+      Toggle View
+    </button>
+    <button *ngIf="!favoritesPanel" (click)="viewFavorites()" class="favorites bg-blue-500 text-white rounded">
+      Favorites
+    </button>
+    <button *ngIf="favoritesPanel" (click)="viewAllContacts()" class="favorites bg-blue-500 text-white rounded">
+      All Contacts
+    </button>
+    <input
+      type="text"
+      placeholder="Search Contacts"
+      (input)="searchContacts($event)"
+      class="border p-2 rounded"
+    />
+  </div>
+
+  <div class="add-contact">
+    <button
+    (click)="addANewContact()"
+    class="p-2 bg-red-500 text-white rounded mt-4"
+  >
+    Add a new Contact
+    </button>
+  </div>
+
+  <!-- List View -->
+  <div *ngIf="viewMode === 'list'">
+    <div
+      *ngFor="let contact of contacts"
+      class="individual-contact-list border-b p-4 flex justify-between items-center"
+      (click)="contactToView(contact, $event)"
+    >
+      <div class="prefix">
+        <div>
+          <input
+            type="checkbox"
+            (change)="addToBulk(contact.id, $event)"
+            (click)="stopPropagation($event)"
+          />
+        </div>
+        <div class="details">
+          <strong>{{ contact.first_name }} {{ contact.last_name }}</strong>
+          <p>{{ contact.email_address }}</p>
+          <p>{{ contact.phone_number }}</p>
+        </div>
+      </div>
+      <div class="contact-buttons">
+        <button
+          *ngIf="!favoritesPanel"
+          (click)="addANewFavorite(contact.id, $event)"
+          class="new-favorite p-2 bg-red-500 text-white rounded"
+          type="text"
+        >
+          Set as favorite
+        </button>
+        <button
+          *ngIf="!favoritesPanel"
+          (click)="deleteContact(contact.id, $event)"
+          class="p-2 bg-red-500 text-white rounded"
+          type="text"
+        >
+          Delete
+        </button>
+        <button
+          *ngIf="favoritesPanel"
+          (click)="removeFromFavorites(contact.id, $event)"
+          class="p-2 bg-red-500 text-white rounded"
+          type="text"
+        >
+          Remove from favorites
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Grid View -->
+  <div *ngIf="viewMode === 'grid'" class="grid grid-cols-2 gap-4">
+    <div 
+      *ngFor="let contact of contacts" 
+      class="individual-contact-grid border p-4"
+      (click)="contactToView(contact, $event)">
+
+      <div class="flex items-center gap-4">
+        <input
+          type="checkbox"
+          (change)="addToBulk(contact.id, $event)"
+          (click)="stopPropagation($event)"
+        />  
+        <img
+          [src]="contact.contact_image || 'assets/default-image.png'"
+          class="rounded-full w-16 h-16"
+          alt="Contact Image"
+        />
+      </div>
+      <div>
+        <strong>{{ contact.first_name }} {{ contact.last_name }}</strong>
+        <p>{{ contact.email_address }}</p>
+      </div>
+      <div class="contact-buttons">
+        <button
+          *ngIf="!favoritesPanel"
+          (click)="addANewFavorite(contact.id, $event)"
+          class="new-favorite p-2 bg-red-500 text-white rounded"
+          type="text"
+        >
+          Set as favorite
+        </button>
+        <button
+          *ngIf="!favoritesPanel"
+          (click)="deleteContact(contact.id, $event)"
+          type="text"
+          class="p-2 bg-red-500 text-white rounded mt-2"
+        >
+          Delete
+        </button>
+        <button
+          *ngIf="favoritesPanel"
+          (click)="removeFromFavorites(contact.id, $event)"
+          class="p-2 bg-red-500 text-white rounded"
+          type="text"
+        >
+          Remove from favorites
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Bulk Delete Button -->
+  <button
+    *ngIf="!favoritesPanel"
+    (click)="bulkDelete()"
+    class="p-2 bg-red-500 text-white rounded mt-4"
+    [disabled]="selectedContacts.length === 0"
+  >
+    Delete Selected
+  </button>
+  <button
+    *ngIf="favoritesPanel && contacts.length > 0"
+    (click)="bulkRemoveFromFavorites()"
+    class="p-2 bg-red-500 text-white rounded mt-4"
+    [disabled]="selectedFavoriteContacts.length === 0"
+  >
+    Remove Selected Contacts from favorites
+  </button>
+</div>
